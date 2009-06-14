@@ -1,6 +1,6 @@
 #ifndef OPERATOR_PLUS_H
 #define OPERATOR_PLUS_H
-#include "node.hpp"
+#include "Operator.hpp"
 
 class operatorplus: public Operator {
 	public :
@@ -8,5 +8,6 @@ class operatorplus: public Operator {
 		virtual Node *derive(void)    ;
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
+
 };
 #endif

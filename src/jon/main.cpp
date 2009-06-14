@@ -14,31 +14,18 @@ int main(void) {
 	f.power = 2;
 	functionpower ff;
 	ff.power = 1;
-	/*fractional a;
-	a.num = 3;
-	a.denom = 2;
-	f.args[0] = &a;*/
 	Variable x;
 	x.name = "x";
 	Variable x1;
 	x1.name = "x";
 	f.arg = &x;
 	ff.arg = &x1;
-	operatormult g;
-	g.args[0] = &f;
-	g.args[1] = &ff;
-	cout << "La derivée de ";
-	g.print();
-	Node *h = g.derive();
-	cout << endl;
-	cout << "est ";
-	h->print();
-	fractional toto;
-	cout << endl;
-	toto.denom = 15;
-	toto.num = 5;
-	toto.print();
-	toto.simplify();
-	toto.print();
+	operatormult *gr = new operatormult;
+	list<Node *> l; 
+	l.push_back(&f);
+	l.push_back(&ff);
+	gr->Args = l;
+	Node *res = gr->derive();
+	res->print();
 	return 0;
 }

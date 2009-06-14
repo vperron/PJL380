@@ -1,6 +1,6 @@
 #ifndef OPERATOR_MULT_H
 #define OPERATOR_MULT_H
-#include "node.hpp"
+#include "Operator.hpp"
 
 class operatormult: public Operator {
 	public :

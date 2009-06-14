@@ -8,29 +8,34 @@ void operatormult::simplify() {
 	cout << "coucou" << endl;
 }
 Node* operatormult::derive() {
-	Node *l = this->args[0]->derive();
-	Node *r = this->args[1]->derive();
-	operatormult *res = new operatormult;
-	operatormult *res1 = new operatormult;
-	operatorplus *result = new operatorplus;
-	res->args[0] = l;
-	res->args[1] = this->args[1];
-	res1->args[0] = this->args[0];
-	res1->args[1] = r;
-	result->args[0] = res;
-	result->args[1] = res1;
+	operatorplus* result = new operatorplus();
+	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
+		operatormult* temp = new operatormult();
+		for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
+			if (i == j) {
+				(temp->Args).push_back(*i);	
+			}
+			else {
+				(temp->Args).push_back((*j)->derive());	
+			}
+		}
+		(result->Args).push_back(temp);
+	}
 	return result;
 }
 Node* operatormult::integrate() {
-	Node *l = this->args[0]->integrate();
+	/*
+	   Node *l = this->args[0]->integrate();
 	Node *r = this->args[1]->integrate();
 	operatormult *result = new operatormult;
 	result->args[0] = l;
 	result->args[1] = r;
-	return result;
+	*/
+	return this;
 }
 void operatormult::print() {
-	args[0]->print();
-	cout << '*'; 
-	args[1]->print();
+	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
+		(*i)->print();
+		cout <<"*";
+	}
 }

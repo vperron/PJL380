@@ -1,6 +1,6 @@
 #ifndef FUNCTION_POWER_H
 #define FUNCTION_POWER_H
-#include "node.hpp"
+#include "Function.hpp"
 
 class functionpower: public Function {
 	public :
