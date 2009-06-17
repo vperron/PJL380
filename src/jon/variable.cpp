@@ -4,6 +4,7 @@
 using namespace std;
 
 Node* Variable::derive() {
+	cout << "variable derive" << endl;
 	fractional* result = new fractional;
 	result->num = 1;
 	result->denom = 1;
@@ -11,8 +12,8 @@ Node* Variable::derive() {
 }
 
 
-void Variable::simplify() {
-	cout << "coucou" << endl;
+Node* Variable::simplify() {
+	return this;
 }
 Node* Variable::integrate() {
 	/*Node *l = this->args[0]->integrate();

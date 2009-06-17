@@ -3,11 +3,13 @@
 using namespace std;
 
 Node* fractional::derive() {
-	this->denom = 0;
-	return this;
+	fractional * res = new fractional;
+	res->num = 0;
+	res->denom = 1;
+	return res;
 }
 
-void fractional::simplify() {
+Node* fractional::simplify() {
 	int divisor = 2;
 	while ((divisor <= denom) && (divisor <= num)) {
 		if ((denom % divisor == 0) && (num % divisor == 0)) {
@@ -18,6 +20,7 @@ void fractional::simplify() {
 			divisor++;
 		}
 	}
+	return this;
 }
 Node* fractional::integrate() {
 	/*Node *l = this->args[0]->integrate();
@@ -30,5 +33,5 @@ Node* fractional::integrate() {
 }
 void fractional::print() {
 	cout << this->num ;
-	if (denom!=1) cout << '/' << this->denom;
+	if (denom!=1 && num!= 0) cout << '/' << this->denom;
 }

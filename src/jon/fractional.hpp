@@ -5,7 +5,7 @@
 
 class fractional: public Node {
 	public :
-		virtual void simplify(void)   ;
+		virtual Node *simplify(void)   ;
 		virtual Node *derive(void)    ;
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
