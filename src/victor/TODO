@@ -1,0 +1,16 @@
+TODO FILE for PJL380
+--------------------
+
+
+
+- Inutile de simplifier les  expressions à la volée, 
+	apparemment Jon veut s'en occupper.
+	Sinon spirit le permet !
+
+- Inutile aussi de créer des arbres autres que binaires.
+
+- Reconnaitre les fonctions.
+
+- Parser les entiers en fractional et recalculer les floats.
+
+- Créer l'arbre.
