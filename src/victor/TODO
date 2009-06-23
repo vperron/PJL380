@@ -9,8 +9,8 @@ TODO FILE for PJL380
 
 - Inutile aussi de créer des arbres autres que binaires.
 
-- Reconnaitre les fonctions.
-
 - Parser les entiers en fractional et recalculer les floats.
 
 - Créer l'arbre.
+    > Trouver un moyen efficace de créer les noeuds;
+        templates à constructeurs variables ???
