@@ -37,21 +37,32 @@ Node * operatormult::get_zero() {
 }
 
 void operatormult::simplify_fractionnals() {
+	fractional *first_fractional_found_ptr = 0;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
 		if (ii!=0) {
-			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-				fractional* jj = dynamic_cast<fractional*>(*j);
-				if (jj!=0 && i != j) {
-					fractional *result = new fractional;
-					result->denom = ii->denom * jj->denom;
-					result->num = ii->num * jj->num;
-					*i = result;
-					j = Args.erase(j);
-				}
+			//this first fractional will act as the accumulator
+			//store it, then remove it from the list
+			if (first_fractional_found_ptr == 0) {
+				first_fractional_found_ptr = ii;
+				i = Args.erase(i);
+				i--;
+			}
+			//remove the other fractionals and compute them with the accumulator
+			else {
+				fractional *result = new fractional;
+				result->denom = ii->denom * first_fractional_found_ptr->denom;
+				result->num = ii->num * first_fractional_found_ptr->num;
+				first_fractional_found_ptr = result; 
+				i = Args.erase(i);
+				i--;
 			}
 		}
 	}	
+	//if there was at least one fractional in the expression, put it back
+	if (first_fractional_found_ptr) {
+		Args.push_back(first_fractional_found_ptr);
+	}
 }
 
 Node* get_not_null(Node *ptr1, Node *ptr2) {
@@ -138,8 +149,9 @@ Node* operatormult::simplify() {
 	Node *test = get_zero();
 	if (test != 0) return test;
 	simplify_fractionnals();
+	simplify_regroupables();
 	remove_ones();
-	cout << endl;
+	if (Args.size() == 0) return new fractional(1);
 	if (Args.size() == 1) return Args.front();
 	else return this;
 }

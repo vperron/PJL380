@@ -27,35 +27,16 @@ int main(void) {
 	l->print();
 	cout << endl;
 */
-/*	functionpower f;
-	f.power = 1;
-	functionpower ff;
-	ff.power = -1;
+	functionexp *a = new functionexp;
+	functionln *b = new functionln;
+	b->arg= a;
 	Variable x;
-	x.name = "x";
-	Variable x1;
-	x1.name = "x";
-	functionpower fff;
-	fff.power=3;
-	fractional toto;
-	toto.num=2;
-	toto.denom = 1;
-	fff.arg = &toto;
-	f.arg = &x;
-	operatormult *gr = new operatormult;
-	fractional toitoi;
-	toitoi.num = 3;
-	toitoi.denom = 6;
-	fractional tutui;
-	tutui.num = 2;
-	tutui.denom = 7;
-	ff.arg = &tutui;
-	(gr->Args).push_back(&ff);
-	(gr->Args).push_back(&toitoi);
+	x.name="x";
+	a->arg = &x;
 	cout << "La dérivée de ";
-	gr->print();
+	b->print();
 	cout << endl << "simplifiée en : " ;
-	Node *res1 = gr->simplify();
+	Node *res1 = b->simplify();
 	res1->print();
 	cout << endl;
 	cout << endl << "          est : \n";
@@ -64,8 +45,7 @@ int main(void) {
 	cout << endl << "simplifiée en : ";
 	res = res->simplify();
 	res->print();
-*/	
-	Operator *toto = new operatorplus(new fractional(5),new fractional(3));
-	toto->simplify()->print();
+
+	
 	return 0;
 }
