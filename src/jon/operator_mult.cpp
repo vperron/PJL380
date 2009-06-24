@@ -7,7 +7,7 @@
 using namespace std;
 
 
-bool operatorplus::compare(Node *a) {
+bool operatormult::compare(Node *a) {
 	(Operator *)this->compare(a);	
 }
 
