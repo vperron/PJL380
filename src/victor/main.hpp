@@ -27,65 +27,89 @@ using namespace boost::spirit;
 // Ce ne sont que des exemples.
 namespace
 {
-    void    do_int(char const* str, char const* end)
-    {
-        string  s(str, end);
-        cout << "INT(" << s << ')' << endl;
+    
+    double val = 0;
+
+
+
+    // Template d'arbre
+    template <typename T> struct Tree {
+
+            Tree<T> Parent;
+
+            T Id;
+
+            Tree<T>* Left;
+            Tree<T>* Right;
+
+    };
+
+    Tree<Node>* root    = NULL;
+    Tree<Node>* current = NULL;
+    
+    
+    
+    void    do_int(int Value)   {
+        cout << "INT(" << Value << ')' << endl;
+        // On verifie que la racine est non vide
+/*        if(current == NULL)
+            current = new Tree<fractional>(Value,1);*/
 
     }
 
-
-    void    do_var(char const* str, char const* end)
-    {
+    void    do_var(char const* str, char const* end)    {
         string  s(str, end);
         cout << "VAR(" << s << ')' << endl;
     }
 
+    void    do_pow(char const* str, char const* end)    {
+        string  s(str, end);
+        cout << "POWER" << endl;
+    }
 
-    void    do_add(char const*, char const*)    
-    { 
+    void    do_add(char const*, char const*)     { 
         cout << "ADD\n"; 
     }
     
-
-    void    do_subt(char const*, char const*)   
-    { 
+    void    do_subt(char const*, char const*)    { 
         cout << "SUBTRACT\n"; 
     }
 
-
-    void    do_mult(char const*, char const*)   
-    { 
+    void    do_mult(char const*, char const*)    { 
         cout << "MULTIPLY\n"; 
     }
     
-
-    void    do_div(char const*, char const*)    
-    { 
+    void    do_div(char const*, char const*)     { 
         cout << "DIVIDE\n";
     }
     
-    
-    void    do_neg(char const*, char const*)   
-    { 
+    void    do_neg(char const*, char const*)     { 
         cout << "NEGATE\n"; 
     }
-    
-    
-    // Un arbre s'adaptant à n'importe quel node
-    template<typename CNode> class MyTree
-    {
-        public:
-            CNode node;
-            
-            // Lien vers les fils      
-            vector<CNode*> children;
-    };
+     
+    void    do_frac(char const* str, char const* end)     { 
+        string  s(str, end);
+        cout << "FRACT(" << s << ')' << endl;
+    }
 
-    MyTree<int> root;
+    void    do_reel(double Value)     { 
+        cout << "REAL(" << Value << ')' << endl;
+        val = Value+1;
+    }   
 
-    // Vars est un vecteur de type Variable 
-    vector<Variable> args;
+    void    foo(double Value)     { 
+        cout << "foo = " << val << endl;
+    }   
+
+    void    do_func(char const* str, char const* end)     { 
+        string  s(str, end-1);
+        cout << "FUNC(" << s << ')' << endl;
+    }
+
+
+
+
+
 
 }
 
@@ -107,33 +131,36 @@ struct calculator : public grammar<calculator>
         definition(calculator const& self)
         {
 
+            // Reconnaitre des fractional comme variables
+            fractional = 
+                lexeme_d[
+                    ( +digit_p >> ch_p('/') >> +digit_p )[&do_frac]
+                    ];
+
+            // Reconnaître des flottants à convertir en fractional
+            reel = strict_ureal_p[&do_reel][&foo];          // Ne reconnait, strictement, que les flottants.
+
             // Un entier : lexeme_d passe en mode parsing caractère. Plante sur des espaces.
-            integer =
-                lexeme_d[ (+digit_p)[&do_int] ]
-                ;
+            integer = uint_p[&do_int]  ;
 
             // une declaration de vars est un lexeme_d d'un caractere puis une suite de cars alphanums ou _ .
             // La declaration est retenue uniquement si la variable n'existe pas.
             var_decl =
-                lexeme_d
-                [
-                    ( +alpha_p >> *( alnum_p | '_' ) )[&do_var]
-                ]
-                ;
+                lexeme_d[  ( +alpha_p >> *( alnum_p | '_' ) )[&do_var] ];
 
-            /*args = 
-                while_p( integer | var_decl )[&args.push_back*/
 
             // Une fonction
-            //function = 
+            function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(')[&do_func] ], expression, ch_p(')'));
 
-                
 
 
             // Un facteur : un entier ou une variable ou une expression entre parentheses, ou +/- un autre facteur
+            // Attention aux priorités.
             factor =
+                reel |
+                fractional |
                 integer |
-                //function
+                function |
                 var_decl |
                 '(' >> expression >> ')' |
                 ( '-' >> factor )[&do_neg] |
@@ -143,8 +170,9 @@ struct calculator : public grammar<calculator>
             // un TERME est un facteur que multiplie ou divise d'autres facteurs
             term =
                 factor 
-                >> *( ( '*' >> factor)[&do_mult]
-                    | ( '/' >> factor)[&do_div]
+                >> *(    ( '^' >> factor)[&do_pow]
+                     | ( '/' >> factor)[&do_div]
+                     | ( '*' >> factor)[&do_mult]
                 )
                 ;
 
@@ -161,7 +189,9 @@ struct calculator : public grammar<calculator>
 
 
         // Chaque element de la grammaire est une regle parametree par notre scanner.
-        rule<ScannerT> expression, term, factor, integer, var_decl;
+        rule<ScannerT> expression, term, factor, integer, var_decl, function, reel, fractional, power;
+
+
 
         // Symbole de demarrage de la grammaire
         rule<ScannerT> const& start() const { return expression; }
