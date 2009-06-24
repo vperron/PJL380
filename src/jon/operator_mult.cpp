@@ -97,21 +97,23 @@ void operatormult::simplify_regroupables() {
 			}
 		}
 		if (count!=1) {
+			cout <<"j'en suis là : ";
+			print();
+			cout <<endl;
 			i = Args.erase(i);
 			i--;
 			if (count !=0) {
 				functionpower *toto = new functionpower;
 				toto->power = count;
 				toto->arg = ii;
-				Args.push_back(toto);	
+				Args.push_front(toto);	
 			}
 			else {
-				cout << "coucou";
-				fractional* result = new fractional;
-				result->num = result->denom = 1;
-				Args.push_back(result);
+			   fractional *toto = new fractional;
+			   toto->num = toto->denom = 1;
+			   Args.push_front(toto);
 			}
-			count = 0;
+			count = 1;
 		}
 	}
 }
