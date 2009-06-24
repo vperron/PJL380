@@ -87,8 +87,10 @@ Node* operatorplus::integrate() {
 }
 void operatorplus::print() {
 	list<Node *>::iterator beforelast = --Args.end();
+	cout << "(";
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		(*i)->print();
 		if (i!=beforelast) cout <<"+";
 	}
+	cout << ")";
 }

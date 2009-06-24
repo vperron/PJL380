@@ -4,6 +4,7 @@
 #include "function_power.hpp"
 #include "fractional.hpp"
 #include "variable.hpp"
+#include "math.h"
 using namespace std;
 
 /*functionpower::functionpower(const &functionpower) {
@@ -11,7 +12,7 @@ using namespace std;
   }*/
 
 Node* functionpower::simplify() {
-	//TODO : simplifier recurisivement
+	arg = arg->simplify();	
 	switch (this->power) {
 		case 0: {
 				fractional *res = new fractional;
@@ -22,7 +23,18 @@ Node* functionpower::simplify() {
 		case 1:
 			return this->arg;
 		default: 
-			return this;
+			{
+				fractional *frac = dynamic_cast<fractional*>(arg);
+				if (frac != 0) {
+					fractional *result = new fractional;
+					result->denom = pow(frac->denom,power);
+					result->num = pow(frac->num,power);
+					return result;
+				}
+				else {
+					return this;
+				}
+			}
 	}
 }
 Node* functionpower::derive() {

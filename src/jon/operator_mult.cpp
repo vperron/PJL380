@@ -38,9 +38,15 @@ Node * operatormult::get_zero() {
 
 void operatormult::simplify_fractionnals() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
+		cout << "je traite i : ";
+		(*i)->print();
+		cout <<endl;
 		fractional* ii = dynamic_cast<fractional*>(*i);
 		if (ii!=0 ) {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
+				cout << "je traite j : ";
+				(*j)->print();
+				cout <<endl;
 				fractional* jj = dynamic_cast<fractional*>(*j);
 				if (jj!=0 && i != j) {
 					fractional *result = new fractional;
@@ -52,8 +58,10 @@ void operatormult::simplify_fractionnals() {
 					j = Args.erase(j);
 					j--;
 				}
+				cout << "done j" <<endl;
 			}
 		}
+		cout << "done i" <<endl;
 	}	
 /*	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
@@ -68,7 +76,7 @@ void operatormult::simplify_regroupables() {
 		if (ii!=0) {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				Regroupable* jj = dynamic_cast<Regroupable*>(*j);
-				if (jj!=0 && jj->compare(ii) && i!=j ) {
+				if (jj!=0 && i!=j && jj->compare(ii) ) {
 				       	count++;
 					j = Args.erase(j);
 					j--;
@@ -89,6 +97,7 @@ void operatormult::simplify_regroupables() {
 void operatormult::flatten() {
 	for (list<Node *>::iterator i = Args.begin();i!= Args.end(); i++) {
 		operatormult *temp = dynamic_cast<operatormult*>(*i);
+		functionpower *pow = dynamic_cast<functionpower*>(*i);
 		if (temp != 0) {
 			for (list<Node *>::iterator j = temp->Args.begin();j!= temp->Args.end(); j++) {
 				Args.push_front(*j);
@@ -96,12 +105,21 @@ void operatormult::flatten() {
 			i = Args.erase(i);
 			i--;
 		}
-
+		else if (pow!=0) {
+			for (int j = 0; j < pow->power;j++) {
+				Args.push_front(pow->arg);
+			}	
+			i = Args.erase(i);
+			i--;
+		}
 	}
 }
 
 Node* operatormult::simplify() {
 	flatten();
+	cout << "after flatten : ";
+	print();
+	cout <<endl;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		*i = (*i)->simplify();
 	}
@@ -122,8 +140,8 @@ Node* operatormult::derive() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		operatormult* temp = new operatormult();
 		for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-			if (i == j) {
-				(temp->Args).push_back(*i);	
+			if (i != j) {
+				(temp->Args).push_back(*j);	
 			}
 			else {
 				(temp->Args).push_back((*j)->derive());	
