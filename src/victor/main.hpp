@@ -13,6 +13,7 @@
 
 #include <boost/spirit.hpp>
 #include <iostream>
+#include <stack>
 #include <string>
 
 
@@ -25,6 +26,8 @@ using namespace boost::spirit;
 
 // Actions sémantiques exécutées sur trigger (reconnaissance d'un objet par exemple)
 // Ce ne sont que des exemples.
+
+// A l'intérieur de ce namespace, tout sera statique.
 namespace
 {
     
@@ -44,13 +47,17 @@ namespace
 
     };
 
+    // Racine et arbre courant
     Tree<Node>* root    = NULL;
     Tree<Node>* current = NULL;
+
+    // Pile
+    stack<Node*>  pile  = stack<Node *>();
     
     
-    
-    void    do_int(int Value)   {
+    void    do_int(const int Value)   {
         cout << "INT(" << Value << ')' << endl;
+        pile.push(new fractional(Value, 1));
         // On verifie que la racine est non vide
 /*        if(current == NULL)
             current = new Tree<fractional>(Value,1);*/
@@ -94,10 +101,10 @@ namespace
 
     void    do_reel(double Value)     { 
         cout << "REAL(" << Value << ')' << endl;
-        val = Value+1;
+        Value++;
     }   
 
-    void    foo(double Value)     { 
+    void    foo(const double Value)     { 
         cout << "foo = " << val << endl;
     }   
 

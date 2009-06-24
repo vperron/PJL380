@@ -94,3 +94,6 @@ void operatorplus::print() {
 	}
 	cout << ")";
 }
+
+operatorplus::operatorplus() {
+}

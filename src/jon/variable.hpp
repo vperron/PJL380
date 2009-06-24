@@ -2,6 +2,7 @@
 #define VARIABLE_H
 
 #include "node.hpp"
+
 #include "regroupable.hpp"
 #include <string>
 

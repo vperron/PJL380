@@ -43,3 +43,8 @@ void fractional::print() {
 	cout << this->num ;
 	if (denom!=1 && num!= 0) cout << '/' << this->denom;
 }
+
+
+fractional::fractional() {
+
+}

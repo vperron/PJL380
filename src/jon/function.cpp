@@ -9,3 +9,7 @@ bool Function::compare (Node *a) {
 	}
 	else return false;
 }
+
+Function::Function() {
+
+}

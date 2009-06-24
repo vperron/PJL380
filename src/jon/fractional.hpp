@@ -9,7 +9,16 @@ class fractional: public Node {
 		virtual Node *derive(void)    ;
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
-	       	virtual bool compare(Node*);
+	    virtual bool compare(Node*);
+
+        // Added a new constructor (victor)
+        fractional(const int d, const int n = 1) {
+            denom = d;
+            num   = n;
+        }
+
+        fractional();
+
 		int denom;
 		int num;
 };
