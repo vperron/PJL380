@@ -10,5 +10,12 @@ class functionpower: public Function {
 		virtual void print(void)      ;
 
 		int power;
+
+		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
+		functionpower() { };
+		functionpower(int p, Node * n) {
+			power = p;
+			arg = n;
+		};
 };
 #endif

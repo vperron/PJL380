@@ -133,6 +133,8 @@ namespace
     void    do_pow(char const* str, char const* end)    {
         string  s(str, end);
         cout << "POWER" << endl;
+		fractional * temp = dynamic_cast<fractional *>(pop_getval(pile));
+		pile.push(new functionpower(temp->num,pop_getval(pile)));
     }
 
     void    do_add(char const*, char const*)     { 
@@ -143,6 +145,9 @@ namespace
     
     void    do_subt(char const*, char const*)    { 
         cout << "SUBTRACT\n"; 
+		pile.push(new operatormult(pop_getval(pile),new fractional(-1)));
+        pile.push(new operatorplus(pop_getval(pile),pop_getval(pile)));
+
     }
 
     void    do_mult(char const*, char const*)    { 
@@ -156,11 +161,12 @@ namespace
     
     void    do_neg(char const*, char const*)     { 
         cout << "NEGATE\n"; 
+		pile.push(new operatormult(pop_getval(pile),new fractional(-1)));
     }
 
     void    do_func(char const* str, char const* end)     { 
         string  s(str, end-1);
-        cout << "FUNC(" << s << ')' << endl;
+        cout << "FUNC(" << s.substr(0,s.find('(')) << ')' << endl;
     }
 
 
@@ -205,7 +211,7 @@ struct calculator : public grammar<calculator>
 
 
             // Une fonction
-            function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(')[&do_func] ], expression, ch_p(')'));
+            function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(') ], expression, ch_p(')'))[&do_func];
 
 
 

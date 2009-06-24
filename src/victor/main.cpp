@@ -53,7 +53,9 @@ main()
             cout << "-------------------------\n";
             cout << "Succès !\n";
             cout << "-------------------------\n";
-			root->print();	
+			pile.top()->print();	
+			cout << "\nEt avec refactoring :\n\t" ;
+			pile.top()->simplify()->print();
         }
         else
         {
