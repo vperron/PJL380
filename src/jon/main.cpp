@@ -28,9 +28,9 @@ int main(void) {
 	cout << endl;
 */
 	functionpower f;
-	f.power = 2;
+	f.power = 1;
 	functionpower ff;
-	ff.power = 2;
+	ff.power = -1;
 	Variable x;
 	x.name = "x";
 	Variable x1;
@@ -44,9 +44,8 @@ int main(void) {
 	f.arg = &x;
 	ff.arg = &x1;
 	operatormult *gr = new operatormult;
-	(gr->Args).push_back(&f);
+	(gr->Args).push_back(&x);
 	(gr->Args).push_back(&ff);
-	(gr->Args).push_back(&fff);
 	cout << "La dérivée de ";
 	gr->print();
 	cout << endl << "simplifiée en : ";
