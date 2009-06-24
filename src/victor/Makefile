@@ -1,6 +1,6 @@
 VPATH=../jon
 
-OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o variable.o function.o operator.o
+OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o function_cos.o function_sin.o function_exp.o function_ln.o variable.o function.o operator.o
 HEADERS = (patsubst %.o,%.hh,$(OBJS))
 PROGRAM = main
 

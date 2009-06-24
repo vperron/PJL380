@@ -30,7 +30,7 @@
 #include <stack>
 #include <string>
 
-
+#include "functions.hpp"
 
 using namespace std;
 // Plus pratique pour appeller les fonctions de l'API spirit.
@@ -157,6 +157,9 @@ namespace
     
     void    do_div(char const*, char const*)     { 
         cout << "DIVIDE\n";
+		pile.push(new functionpower(1,pop_getval(pile)));
+        pile.push(new operatormult(pop_getval(pile),pop_getval(pile)));
+
     }
     
     void    do_neg(char const*, char const*)     { 
@@ -164,10 +167,25 @@ namespace
 		pile.push(new operatormult(pop_getval(pile),new fractional(-1)));
     }
 
-    void    do_func(char const* str, char const* end)     { 
-        string  s(str, end-1);
-        cout << "FUNC(" << s.substr(0,s.find('(')) << ')' << endl;
-    }
+
+	// Foncteur utile ( et un peu plus finaud ;) ) pour traiter toutes les fonctions possibles 
+	struct do_func
+	{
+		// Appel avec parametre
+		do_func(Function * f) {
+			f->arg = pop_getval(pile) ;
+			pile.push(f);
+		}
+
+		// Appel standard de la grammaire
+		void operator()(char const* str, char const* end) const	{   
+	   		string  s(str, end-1);
+			s = s.substr(0,s.find('('));
+    	    cout << "FUNC(" << s << ')' << endl;
+		}
+
+	};
+
 
 
 
@@ -211,8 +229,17 @@ struct calculator : public grammar<calculator>
 
 
             // Une fonction
-            function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(') ], expression, ch_p(')'))[&do_func];
+            // function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(') ], expression, ch_p(')'))[&do_func];
 
+
+			// TODO: Pour le moment, ça fait un segfault.
+
+			/*function = 
+				confix_p( str_p("cos(") , expression, ch_p(')'))[do_func(new functionpower())] |
+				confix_p( str_p("sin(") , expression, ch_p(')'))[do_func(new functionsin())] |
+				confix_p( str_p("exp(") , expression, ch_p(')'))[do_func(new functionexp())] |
+				confix_p( str_p("ln(" ) , expression, ch_p(')'))[do_func(new functionln())]
+				;*/
 
 
             // Un facteur : un entier ou une variable ou une expression entre parentheses, ou +/- un autre facteur
@@ -221,7 +248,7 @@ struct calculator : public grammar<calculator>
                 reel |
                 fractional |
                 integer |
-                function |
+                //function |
                 var_decl |
                 '(' >> expression >> ')' |
                 ( '-' >> factor )[&do_neg] |

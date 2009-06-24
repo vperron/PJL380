@@ -1,9 +1,9 @@
-#ifndef FUNCTION_POWER_H
-#define FUNCTION_POWER_H
+#ifndef FUNCTION_LN_H
+#define FUNCTION_LN_H
 #include "function.hpp"
 #include "functions.hpp"
 
-class functionpower: public Function {
+class functionln: public Function {
 	public :
 		virtual Node *simplify(void)   ;
 		virtual Node *derive(void)    ;
@@ -13,8 +13,8 @@ class functionpower: public Function {
 		int power;
 
 		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
-		functionpower() { };
-		functionpower(int p, Node * n) {
+		functionln() { };
+		functionln(int p, Node * n) {
 			power = p;
 			arg = n;
 		};
