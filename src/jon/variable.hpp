@@ -6,6 +6,9 @@
 #include "regroupable.hpp"
 #include <string>
 
+// (victor) Plus cool avec le namespace ;)
+using namespace std;
+
 class Variable: public Regroupable {
 	public :
 		virtual Node *simplify(void)  ;
@@ -13,7 +16,12 @@ class Variable: public Regroupable {
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 	       	virtual bool compare(Node *)  ;
-		std::string name;
+		string name;
 		
+        // Added new constructor (victor)
+        Variable(string s = string()) { 
+            // On est sereins, l'operateur = de string effectue une COPIE
+            name = s;
+        }
 };
 #endif

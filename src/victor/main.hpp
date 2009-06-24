@@ -58,15 +58,12 @@ namespace
     void    do_int(const int Value)   {
         cout << "INT(" << Value << ')' << endl;
         pile.push(new fractional(Value, 1));
-        // On verifie que la racine est non vide
-/*        if(current == NULL)
-            current = new Tree<fractional>(Value,1);*/
-
     }
 
     void    do_var(char const* str, char const* end)    {
         string  s(str, end);
         cout << "VAR(" << s << ')' << endl;
+        pile.push(new Variable(s));
     }
 
     void    do_pow(char const* str, char const* end)    {
