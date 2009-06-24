@@ -12,7 +12,15 @@
 #include <string>
 
 
-
+/*
+void printTree(Node * t) {
+	if(t->Left !=  NULL)
+		printTree(t->Left);
+	t->Me->print();
+	if(t->Right !=  NULL)
+		printTree(t->Right);
+}
+*/
 
 
 
@@ -31,7 +39,6 @@ main()
 
     calculator calc;    //  Our parser
 
-    Variable root;   // Our root node
 
     string str;
     while (getline(cin, str))
@@ -46,6 +53,7 @@ main()
             cout << "-------------------------\n";
             cout << "Succès !\n";
             cout << "-------------------------\n";
+			root->print();	
         }
         else
         {
