@@ -11,5 +11,7 @@ bool Function::compare (Node *a) {
 }
 
 Function::Function() {
-
+}
+Function::Function(Node *a) {
+	this->arg = a;
 }

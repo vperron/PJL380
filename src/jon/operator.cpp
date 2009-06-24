@@ -20,6 +20,9 @@ bool Operator::compare(Node *a) {
 	return true;
 }
 
-Operator::Operator() {
+Operator::Operator() {}
 
+Operator::Operator(Node *a,Node *b) {
+	this->Args.push_back(a);
+	this->Args.push_back(b);
 }

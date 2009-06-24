@@ -9,5 +9,6 @@ class Operator : public Node {
 		std::list<Node *> Args;
 		virtual bool compare(Node *)  ;
         Operator();
+	Operator(Node* ,Node *);
 };
 #endif

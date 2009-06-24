@@ -27,7 +27,7 @@ int main(void) {
 	l->print();
 	cout << endl;
 */
-	functionpower f;
+/*	functionpower f;
 	f.power = 1;
 	functionpower ff;
 	ff.power = -1;
@@ -64,5 +64,8 @@ int main(void) {
 	cout << endl << "simplifiée en : ";
 	res = res->simplify();
 	res->print();
+*/	
+	Operator *toto = new operatorplus(new fractional(5),new fractional(3));
+	toto->print();
 	return 0;
 }

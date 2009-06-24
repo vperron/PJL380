@@ -10,6 +10,7 @@ class Function : public Regroupable {
 		bool compare (Node *a);
 		Node* arg;
         Function();
+        Function(Node *a);
 };
 
 #endif

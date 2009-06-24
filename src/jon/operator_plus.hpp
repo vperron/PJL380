@@ -14,7 +14,8 @@ class operatorplus: public Operator {
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 		virtual bool compare(Node *)  ;
-        operatorplus();
+		operatorplus();
+		operatorplus(Node * a,Node * b) : Operator(a,b) { };
 
 };
 #endif
