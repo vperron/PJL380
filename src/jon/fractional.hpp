@@ -12,7 +12,7 @@ class fractional: public Node {
 	    virtual bool compare(Node*);
 
         // Added a new constructor (victor)
-        fractional(const int d, const int n = 1) {
+        fractional(const int n, const int d = 1) {
             denom = d;
             num   = n;
         }

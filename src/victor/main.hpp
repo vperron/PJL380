@@ -12,6 +12,7 @@
 
 
 #include <boost/spirit.hpp>
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <stack>
 #include <string>
@@ -30,31 +31,66 @@ using namespace boost::spirit;
 // A l'intérieur de ce namespace, tout sera statique.
 namespace
 {
-    
-    double val = 0;
 
 
 
-    // Template d'arbre
-    template <typename T> struct Tree {
 
-            Tree<T> Parent;
+    // Template d'arbre (pas forcément utile puisqu'on l'instancie sur le meme type mais bon...)
+    struct Tree {
 
-            T Id;
 
-            Tree<T>* Left;
-            Tree<T>* Right;
+            Node * Me;
+
+            Node * Left;
+            Node * Right;
+
+            // Des methodes de manipulation
+            Tree(); 
+            // Forme polonaise inverse : si on retire des éléments de la stack ce sera droite-gauche
+            Tree(Node * me, Node * right, Node * left) {
+                Me          = me;
+                Right       = right;
+                Left        = left;
+            };
 
     };
 
+    Tree::Tree() {
+    }
+
+    // Fonction str2frac ( conversion string --> fractional)
+    fractional* str2frac(const string s) {
+        int pos = s.find('/');
+        return new fractional(
+                boost::lexical_cast<int>(s.substr(0,pos)), 
+                boost::lexical_cast<int>(s.substr(pos+1, s.size()-pos))
+                    );
+    }
+
+    // Fonction dbl2frac ( conversion double --> fractional)
+    fractional* dbl2frac(const double u) {
+        
+        int denom = 1;
+
+        // Ici sans precision fixée, mais on peut imaginer de limiter à un certain nombre de decimales.
+        while(modf(u*(double)denom,NULL) != 0) 
+            denom *= 10;
+
+        return new fractional(
+                boost::lexical_cast<int>(u*denom), 
+                denom);
+    }
+
+
+
     // Racine et arbre courant
-    Tree<Node>* root    = NULL;
-    Tree<Node>* current = NULL;
+    Tree *root    = NULL;
 
     // Pile
     stack<Node*>  pile  = stack<Node *>();
     
     
+    // ================================================= VARIABLES
     void    do_int(const int Value)   {
         cout << "INT(" << Value << ')' << endl;
         pile.push(new fractional(Value, 1));
@@ -66,48 +102,103 @@ namespace
         pile.push(new Variable(s));
     }
 
-    void    do_pow(char const* str, char const* end)    {
-        string  s(str, end);
-        cout << "POWER" << endl;
-    }
-
-    void    do_add(char const*, char const*)     { 
-        cout << "ADD\n"; 
-    }
-    
-    void    do_subt(char const*, char const*)    { 
-        cout << "SUBTRACT\n"; 
-    }
-
-    void    do_mult(char const*, char const*)    { 
-        cout << "MULTIPLY\n"; 
-    }
-    
-    void    do_div(char const*, char const*)     { 
-        cout << "DIVIDE\n";
-    }
-    
-    void    do_neg(char const*, char const*)     { 
-        cout << "NEGATE\n"; 
-    }
      
     void    do_frac(char const* str, char const* end)     { 
         string  s(str, end);
         cout << "FRACT(" << s << ')' << endl;
+        pile.push(str2frac(s));
+
     }
 
-    void    do_reel(double Value)     { 
+    void    do_reel(const double Value)     { 
         cout << "REAL(" << Value << ')' << endl;
-        Value++;
+        pile.push(dbl2frac(Value));
     }   
 
-    void    foo(const double Value)     { 
-        cout << "foo = " << val << endl;
-    }   
+
+    // =============================================== OPERATEURS
+    void    do_pow(char const* str, char const* end)    {
+        string  s(str, end);
+        cout << "POWER" << endl;
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(
+                    new functionpower(),
+                    pile.pop(),
+                    pile.pop()
+                    );
+        else
+            root = new Tree(new functionpower(),pile.pop(),root->Me);
+    }
+
+    void    do_add(char const*, char const*)     { 
+        cout << "ADD\n"; 
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new operatorplus(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new operatorplus(),pile.pop(),root->Me);
+    }
+    
+    void    do_subt(char const*, char const*)    { 
+        cout << "SUBTRACT\n"; 
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new functionpower(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new functionpower(),pile.pop(),root->Me);
+    }
+
+    void    do_mult(char const*, char const*)    { 
+        cout << "MULTIPLY\n"; 
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new operatormult(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new operatormult(),pile.pop(),root->Me);
+    }
+    
+    void    do_div(char const*, char const*)     { 
+        cout << "DIVIDE\n";
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new functionpower(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new functionpower(),pile.pop(),root->Me);
+    }
+    
+    void    do_neg(char const*, char const*)     { 
+        cout << "NEGATE\n"; 
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new functionpower(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new functionpower(),pile.pop(),root->Me);
+    }
+
 
     void    do_func(char const* str, char const* end)     { 
         string  s(str, end-1);
         cout << "FUNC(" << s << ')' << endl;
+        // Creation du noeud de fonction temporaire
+
+        // Si la racine n'existe pas
+        if ( root == NULL )
+            root = new Tree(new functionpower(),pile.pop(),pile.pop());
+        else
+            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
 
 
@@ -138,11 +229,12 @@ struct calculator : public grammar<calculator>
             // Reconnaitre des fractional comme variables
             fractional = 
                 lexeme_d[
-                    ( +digit_p >> ch_p('/') >> +digit_p )[&do_frac]
+                    //( +digit_p >> ch_p('/') >> +digit_p )[&do_frac]
+                    ( uint_p >> ch_p('/') >> uint_p )[&do_frac]
                     ];
 
             // Reconnaître des flottants à convertir en fractional
-            reel = strict_ureal_p[&do_reel][&foo];          // Ne reconnait, strictement, que les flottants.
+            reel = strict_ureal_p[&do_reel];          // Ne reconnait, strictement, que les flottants.
 
             // Un entier : lexeme_d passe en mode parsing caractère. Plante sur des espaces.
             integer = uint_p[&do_int]  ;
