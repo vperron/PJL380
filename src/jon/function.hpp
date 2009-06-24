@@ -1,6 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include "node.hpp"
+
 #include "regroupable.hpp"
 class Function : public Regroupable {
 	private:
@@ -8,6 +9,7 @@ class Function : public Regroupable {
 	public :
 		bool compare (Node *a);
 		Node* arg;
+        Function();
 };
 
 #endif

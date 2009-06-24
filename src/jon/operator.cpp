@@ -19,3 +19,7 @@ bool Operator::compare(Node *a) {
 	}
 	return true;
 }
+
+Operator::Operator() {
+
+}

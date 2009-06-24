@@ -15,6 +15,7 @@
 #include "fractional.hpp"
 #include "operator.hpp"
 #include "variable.hpp"
+#include "function_power.hpp"
 #include "function.hpp"
 
 

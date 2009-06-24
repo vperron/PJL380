@@ -1,6 +1,6 @@
 VPATH=../jon
 
-OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o variable.o
+OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o variable.o function.o operator.o
 HEADERS = (patsubst %.o,%.hh,$(OBJS))
 PROGRAM = main
 
@@ -10,6 +10,11 @@ LD = g++
 CXXFLAGS += -g -I../jon
 
 all : $(PROGRAM)
+
+me :
+	rm -f main.o
+	$(CC) $(CXXFLAGS) -c -o main.o main.cpp
+
 clean :
 	rm -f $(OBJS)
 	rm -f $(PROGRAM)
