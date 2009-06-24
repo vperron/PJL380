@@ -26,7 +26,6 @@ Node* functionpower::simplify() {
 	}
 }
 Node* functionpower::derive() {
-	cout << "power derive" << endl;
 	if (this->power != 1) { //TODO passer en fractional
 		Node *l = this->arg->derive();
 		operatormult *result = new operatormult;

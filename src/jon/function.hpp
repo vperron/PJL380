@@ -1,10 +1,12 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include "node.hpp"
-class Function : public Node {
+#include "regroupable.hpp"
+class Function : public Regroupable {
 	private:
 
 	public :
+		bool compare (Node *a);
 		Node* arg;
 };
 

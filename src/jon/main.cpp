@@ -9,7 +9,7 @@
 using namespace std;
 
 int main(void) {
-	functionpower f;
+/*	functionpower f;
 	f.power = 2;
 	Variable x;
 	x.name = "x";
@@ -26,8 +26,10 @@ int main(void) {
 	Node* l = k->simplify();
 	l->print();
 	cout << endl;
-
-	/*functionpower ff;
+*/
+	functionpower f;
+	f.power = 2;
+	functionpower ff;
 	ff.power = 1;
 	Variable x;
 	x.name = "x";
@@ -35,7 +37,7 @@ int main(void) {
 	x1.name = "x";
 	f.arg = &x;
 	ff.arg = &x1;
-	operatorplus *gr = new operatorplus;
+	operatormult *gr = new operatormult;
 	(gr->Args).push_back(&f);
 	(gr->Args).push_back(&ff);
 	cout << "La dérivée de ";
@@ -44,11 +46,11 @@ int main(void) {
 	//Node *res1 = gr->simplify();
 	//res1->print();
 	cout << endl;
-	Node *res = gr->derive();
 	cout << endl << "          est : \n";
+	Node *res = gr->derive();
 	res->print();
-	res = res->simplify();
 	cout << endl << "simplifiée en : ";
-	res->print();*/
+	res = res->simplify();
+	res->print();
 	return 0;
 }

@@ -2,6 +2,14 @@
 #include "fractional.hpp"
 using namespace std;
 
+bool fractional::compare(Node* a) {
+	/*fractional *b = dynamic_cast<fractional*> a;
+	if (b != 0) {
+		return (b->num==num && b->denom=denom);
+	}*/
+	return false;
+}
+
 Node* fractional::derive() {
 	fractional * res = new fractional;
 	res->num = 0;
@@ -9,7 +17,7 @@ Node* fractional::derive() {
 	return res;
 }
 
-Node* fractional::simplify() {
+fractional* fractional::simplify() {
 	int divisor = 2;
 	while ((divisor <= denom) && (divisor <= num)) {
 		if ((denom % divisor == 0) && (num % divisor == 0)) {

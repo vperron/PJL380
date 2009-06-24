@@ -1,5 +1,5 @@
 
-OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o variable.o
+OBJS = main.o operator_plus.o fractional.o operator_mult.o function_power.o variable.o operator.o function.o
 HEADERS = (patsubst %.o,%.hh,$(OBJS))
 PROGRAM = main
 

@@ -7,5 +7,6 @@ class Operator : public Node {
 
 	public :
 		std::list<Node *> Args;
+		virtual bool compare(Node *)  ;
 };
 #endif

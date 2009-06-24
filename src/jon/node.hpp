@@ -10,6 +10,7 @@ class Node {
 		virtual Node *derive(void)    = 0;
 		virtual Node *integrate(void) = 0;
 		virtual void print(void)      = 0;
+	       	virtual bool compare(Node *)  = 0;
 };
 
 #endif

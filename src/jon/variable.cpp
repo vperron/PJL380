@@ -3,12 +3,20 @@
 #include "fractional.hpp"
 using namespace std;
 
+
 Node* Variable::derive() {
-	cout << "variable derive" << endl;
 	fractional* result = new fractional;
 	result->num = 1;
 	result->denom = 1;
 	return result;
+}
+
+bool Variable::compare(Node *a) {
+	Variable* v= dynamic_cast<Variable *>(a);
+	if (v!=0) {
+		return (0 == name.compare(v->name));
+	}
+	else return false;
 }
 
 
