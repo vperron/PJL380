@@ -1,3 +1,13 @@
+/*-----------------------------------------------------------------------------
+
+	main.hpp : 
+	Contient le code nécessaire au parser, dont sa grammaire et les actions
+	sémantiques entreprises lors de la reconnaissance.
+
+	Victor Perron - PJL380 - Juin 2009
+
+-----------------------------------------------------------------------------*/
+
 /*=============================================================================
     Copyright (c) 2002-2003 Joel de Guzman
     http://spirit.sourceforge.net/
@@ -11,9 +21,12 @@
 
 
 
+// La librairie de parsing
 #include <boost/spirit.hpp>
+// Transformations string -> entier ou string -> float
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+// Pour la pile d'arguments
 #include <stack>
 #include <string>
 
@@ -26,7 +39,8 @@ using namespace boost::spirit;
 
 
 // Actions sémantiques exécutées sur trigger (reconnaissance d'un objet par exemple)
-// Ce ne sont que des exemples.
+
+
 
 // A l'intérieur de ce namespace, tout sera statique.
 namespace
@@ -34,31 +48,8 @@ namespace
 
 
 
-
-    // Template d'arbre (pas forcément utile puisqu'on l'instancie sur le meme type mais bon...)
-    struct Tree {
-
-
-            Node * Me;
-
-            Node * Left;
-            Node * Right;
-
-            // Des methodes de manipulation
-            Tree(); 
-            // Forme polonaise inverse : si on retire des éléments de la stack ce sera droite-gauche
-            Tree(Node * me, Node * right, Node * left) {
-                Me          = me;
-                Right       = right;
-                Left        = left;
-            };
-
-    };
-
-    Tree::Tree() {
-    }
-
-    // Fonction str2frac ( conversion string --> fractional)
+// 		Fonction str2frac ( conversion string --> fractional)
+//=============================================================================
     fractional* str2frac(const string s) {
         int pos = s.find('/');
         return new fractional(
@@ -67,7 +58,9 @@ namespace
                     );
     }
 
-    // Fonction dbl2frac ( conversion double --> fractional)
+	
+// 		Fonction dbl2frac ( conversion double --> fractional)
+//=============================================================================
     fractional* dbl2frac(const double u) {
         
         int denom = 1;
@@ -82,15 +75,36 @@ namespace
     }
 
 
+// 		Recupere la valeur en haut de la pile et pop 
+//=============================================================================
+	Node * pop_getval(stack<Node *> &s) {
+		// Apres cette opération, temp pointe sur la bonne instance, tout comme s.top() .
+		Node * temp = s.top();
+		// Je pense que s.pop déréférence et supprime la mémoire associée...
+		s.pop();
+		return temp;
+	}
 
-    // Racine et arbre courant
-    Tree *root    = NULL;
 
-    // Pile
-    stack<Node*>  pile  = stack<Node *>();
+
+
+
+//		VARIABLES
+//=============================================================================
+
+// 		Racine et arbre courant
+    Operator * 		root    	= NULL;
+	Operator *		temp 		= NULL;
+
+// 		Pile
+    stack<Node*>  	pile  		= stack<Node *>();
     
     
-    // ================================================= VARIABLES
+//		ACTIONS SEMANTIQUES
+//=============================================================================
+
+
+	// POUR LES VARIABLES =====================================================
     void    do_int(const int Value)   {
         cout << "INT(" << Value << ')' << endl;
         pile.push(new fractional(Value, 1));
@@ -102,7 +116,6 @@ namespace
         pile.push(new Variable(s));
     }
 
-     
     void    do_frac(char const* str, char const* end)     { 
         string  s(str, end);
         cout << "FRACT(" << s << ')' << endl;
@@ -116,93 +129,39 @@ namespace
     }   
 
 
-    // =============================================== OPERATEURS
+	// POUR LES OPERATEURS ===================================================
     void    do_pow(char const* str, char const* end)    {
         string  s(str, end);
         cout << "POWER" << endl;
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(
-                    new functionpower(),
-                    pile.pop(),
-                    pile.pop()
-                    );
-        else
-            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
 
     void    do_add(char const*, char const*)     { 
         cout << "ADD\n"; 
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new operatorplus(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new operatorplus(),pile.pop(),root->Me);
+		// On va mettre sur la pile le nouveau noeud, en depilant au préalable les valeurs préstockées
+        pile.push(new operatorplus(pop_getval(pile),pop_getval(pile)));
     }
     
     void    do_subt(char const*, char const*)    { 
         cout << "SUBTRACT\n"; 
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new functionpower(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
 
     void    do_mult(char const*, char const*)    { 
         cout << "MULTIPLY\n"; 
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new operatormult(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new operatormult(),pile.pop(),root->Me);
+        pile.push(new operatormult(pop_getval(pile),pop_getval(pile)));
     }
     
     void    do_div(char const*, char const*)     { 
         cout << "DIVIDE\n";
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new functionpower(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
     
     void    do_neg(char const*, char const*)     { 
         cout << "NEGATE\n"; 
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new functionpower(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
-
 
     void    do_func(char const* str, char const* end)     { 
         string  s(str, end-1);
         cout << "FUNC(" << s << ')' << endl;
-        // Creation du noeud de fonction temporaire
-
-        // Si la racine n'existe pas
-        if ( root == NULL )
-            root = new Tree(new functionpower(),pile.pop(),pile.pop());
-        else
-            root = new Tree(new functionpower(),pile.pop(),root->Me);
     }
-
-
-
 
 
 

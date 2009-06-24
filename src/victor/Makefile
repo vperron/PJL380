@@ -15,6 +15,10 @@ me :
 	rm -f main.o
 	$(CC) $(CXXFLAGS) -c -o main.o main.cpp
 
+mini:
+	rm -f main.o
+	rm -f $(PROGRAM)
+
 clean :
 	rm -f $(OBJS)
 	rm -f $(PROGRAM)
