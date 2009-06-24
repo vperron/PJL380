@@ -27,8 +27,14 @@ Node* functionpower::simplify() {
 				fractional *frac = dynamic_cast<fractional*>(arg);
 				if (frac != 0) {
 					fractional *result = new fractional;
-					result->denom = pow(frac->denom,power);
-					result->num = pow(frac->num,power);
+					if (power > 0 ) {
+						result->denom = pow(frac->denom,power);
+						result->num = pow(frac->num,power);
+					}
+					else {
+						result->num = pow(frac->denom,-power);
+						result->denom = pow(frac->num,-power);
+					}
 					return result;
 				}
 				else {

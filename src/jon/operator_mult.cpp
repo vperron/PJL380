@@ -52,20 +52,13 @@ void operatormult::simplify_fractionnals() {
 			}
 		}
 	}	
-/*	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
-		fractional* ii = dynamic_cast<fractional*>(*i);
-		if (ii!=0 ) {
-			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-*/}
+}
 
 Node* get_not_null(Node *ptr1, Node *ptr2) {
 	if (ptr1 != 0) return ptr1;
 	return ptr2;
 }
 void operatormult::simplify_regroupables() {
-	cout << endl <<"simplify variable" << endl;
-	print();
-	cout << endl;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		Regroupable* ii = dynamic_cast<Regroupable*>(*i);
 		functionpower* iii = dynamic_cast<functionpower*>(*i);
@@ -81,9 +74,6 @@ void operatormult::simplify_regroupables() {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				Regroupable* jj = dynamic_cast<Regroupable*>(*j);
 				functionpower* jjj = dynamic_cast<functionpower*>(*j);
-				cout << "je traite : " ;
-				(*j)->print();
-			       	cout <<endl;
 				if (jj!=0 && i!=j && jj->compare(maybe_regroupable) ) {
 				       	count++;
 					j = Args.erase(j);
@@ -97,9 +87,6 @@ void operatormult::simplify_regroupables() {
 			}
 		}
 		if (count!=1) {
-			cout <<"j'en suis là : ";
-			print();
-			cout <<endl;
 			i = Args.erase(i);
 			i--;
 			if (count !=0) {
@@ -140,39 +127,18 @@ void operatormult::flatten() {
 }
 
 Node* operatormult::simplify() {
-	cout << endl <<"avant variable" << endl;
-	print();
-	cout << endl;
 	flatten();
-	cout << endl <<"après variable" << endl;
-	print();
-	cout << endl;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		*i = (*i)->simplify();
 	}
-	cout << endl <<"simplify variable" << endl;
-	print();
-	cout << endl;
 
 	remove_ones();
 
-	cout << endl <<"simplify variable" << endl;
-	print();
-	cout << endl;
 	//if there is at least one zero, the whole expression is this zero
 	Node *test = get_zero();
 	if (test != 0) return test;
 	simplify_fractionnals();
-	cout << endl <<"simplify variable" << endl;
-	print();
-	cout << endl;
 	remove_ones();
-	cout << endl <<"simplify variable" << endl;
-	print();
-	cout << endl;
-	simplify_regroupables();
-	cout << endl <<"simplify variable" << endl;
-	print();
 	cout << endl;
 	if (Args.size() == 1) return Args.front();
 	else return this;
