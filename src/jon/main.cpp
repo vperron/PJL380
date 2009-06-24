@@ -66,6 +66,6 @@ int main(void) {
 	res->print();
 */	
 	Operator *toto = new operatorplus(new fractional(5),new fractional(3));
-	toto->print();
+	toto->simplify()->print();
 	return 0;
 }

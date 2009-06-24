@@ -22,9 +22,10 @@ void operatorplus::flatten() {
 	}
 }
 void operatorplus::simplify_fractionnals() {
+	cout << "coucou" <<endl;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
-		if (ii!=0 ) {
+		if (ii!=0) {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				fractional* jj = dynamic_cast<fractional*>(*j);
 				if (jj!=0 && i != j) {
@@ -32,6 +33,9 @@ void operatorplus::simplify_fractionnals() {
 					result->denom = ii->denom * jj->denom;
 					result->num = ii->num * jj->denom + ii->denom * jj->num;
 					result = result->simplify();
+					cout << "je trouve ça : ";
+					result->print();
+					cout<<endl;
 					Args.insert(i,result);
 					i = Args.erase(i);
 					i--;
@@ -68,6 +72,7 @@ Node* operatorplus::simplify() {
 	}
 
 	remove_zeros();
+	simplify_fractionnals();
 	if (Args.size() == 1) return Args.front();
 	else return this;
 }

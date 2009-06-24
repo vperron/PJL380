@@ -39,7 +39,7 @@ Node * operatormult::get_zero() {
 void operatormult::simplify_fractionnals() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
-		if (ii!=0 ) {
+		if (ii!=0) {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				fractional* jj = dynamic_cast<fractional*>(*j);
 				if (jj!=0 && i != j) {
