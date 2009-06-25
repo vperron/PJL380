@@ -169,12 +169,13 @@ namespace
 
 
 	// Foncteur utile ( et un peu plus finaud ;) ) pour traiter toutes les fonctions possibles 
+	// Un peu de l'overkill : en fait je n'ai besoin ni de propriétés, ni de constructeur...
+	// Mais bon c'est joli quand meme !
+	template <typename Tf>
 	struct do_func
 	{
-		// Appel avec parametre
-		do_func(Function * f) {
-			f->arg = pop_getval(pile) ;
-			pile.push(f);
+		// Constructeur du foncteur : on crée une instance par paramètre
+		do_func() {
 		}
 
 		// Appel standard de la grammaire
@@ -182,7 +183,11 @@ namespace
 	   		string  s(str, end-1);
 			s = s.substr(0,s.find('('));
     	    cout << "FUNC(" << s << ')' << endl;
+			// Mettre sur la pile une nouvelle instance de la fonction particuliere à pusher
+			// Et lui donner son argument à la volée.
+			pile.push(dynamic_cast<Function *>(new Tf(pop_getval(pile))));
 		}
+
 
 	};
 
@@ -234,12 +239,12 @@ struct calculator : public grammar<calculator>
 
 			// TODO: Pour le moment, ça fait un segfault.
 
-			/*function = 
-				confix_p( str_p("cos(") , expression, ch_p(')'))[do_func(new functionpower())] |
-				confix_p( str_p("sin(") , expression, ch_p(')'))[do_func(new functionsin())] |
-				confix_p( str_p("exp(") , expression, ch_p(')'))[do_func(new functionexp())] |
-				confix_p( str_p("ln(" ) , expression, ch_p(')'))[do_func(new functionln())]
-				;*/
+			function = 
+				confix_p( str_p("cos(") , expression, ch_p(')'))[do_func<functioncos>()]     |
+				confix_p( str_p("sin(") , expression, ch_p(')'))[do_func<functionsin>()] |
+				confix_p( str_p("exp(") , expression, ch_p(')'))[do_func<functionexp>()] |
+				confix_p( str_p("ln(" ) , expression, ch_p(')'))[do_func<functionln>()]
+				;
 
 
             // Un facteur : un entier ou une variable ou une expression entre parentheses, ou +/- un autre facteur
@@ -248,7 +253,7 @@ struct calculator : public grammar<calculator>
                 reel |
                 fractional |
                 integer |
-                //function |
+                function |
                 var_decl |
                 '(' >> expression >> ')' |
                 ( '-' >> factor )[&do_neg] |
