@@ -14,9 +14,9 @@ class functionpower: public Function {
 
 		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
 		functionpower() { };
-		functionpower(int p, Node * n) {
-			power = p;
-			arg = n;
+		functionpower(int p,Node * n) {
+			arg 	= n;
+			power 	= p;
 		};
 };
 #endif

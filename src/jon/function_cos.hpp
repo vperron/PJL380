@@ -10,12 +10,10 @@ class functioncos: public Function {
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 
-		int power;
 
 		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
 		functioncos() { };
-		functioncos(int p, Node * n) {
-			power = p;
+		functioncos(Node * n) {
 			arg = n;
 		};
 };

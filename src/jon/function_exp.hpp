@@ -10,12 +10,9 @@ class functionexp: public Function {
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 
-		int power;
-
 		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
 		functionexp() { };
-		functionexp(int p, Node * n) {
-			power = p;
+		functionexp(Node * n) {
 			arg = n;
 		};
 };

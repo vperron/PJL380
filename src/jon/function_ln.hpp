@@ -10,12 +10,9 @@ class functionln: public Function {
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 
-		int power;
-
 		// (victor) Ajout de constructeurs pour la simplicité, comme d'hab.
 		functionln() { };
-		functionln(int p, Node * n) {
-			power = p;
+		functionln(Node * n) {
 			arg = n;
 		};
 };
