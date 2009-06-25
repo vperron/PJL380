@@ -27,6 +27,7 @@ int main(void) {
 	l->print();
 	cout << endl;
 */
+	/*
 	functionexp *a = new functionexp;
 	functionln *b = new functionln;
 	b->arg= a;
@@ -45,7 +46,12 @@ int main(void) {
 	cout << endl << "simplifiée en : ";
 	res = res->simplify();
 	res->print();
+*/
 
-	
+	operatormult* toto = new operatormult;
+	toto->Args.push_back(new fractional(2));
+	toto->Args.push_back(new fractional(3));
+	toto->print();
+	toto->simplify()->print();
 	return 0;
 }

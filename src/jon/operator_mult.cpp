@@ -73,12 +73,17 @@ void operatormult::simplify_regroupables() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		Regroupable* ii = dynamic_cast<Regroupable*>(*i);
 		functionpower* iii = dynamic_cast<functionpower*>(*i);
-		int count ;
+		bool found_something = 0;
+		int count = 0;
 		Node *maybe_function_arg = 0;
-		if (ii!=0) count = 1;
+		if (ii!=0) {
+			count = 1;
+			found_something = true;
+		}
 		else if (iii!=0) {
 			count = iii->power;
 			maybe_function_arg = iii->arg;
+			found_something = true;
 		}
 		Node *maybe_regroupable = get_not_null(ii,maybe_function_arg);
 		if (maybe_regroupable!=0) {
@@ -97,7 +102,7 @@ void operatormult::simplify_regroupables() {
 				}
 			}
 		}
-		if (count!=1) {
+		if (count!=1 && found_something) {
 			i = Args.erase(i);
 			i--;
 			if (count !=0) {
@@ -111,7 +116,6 @@ void operatormult::simplify_regroupables() {
 			   toto->num = toto->denom = 1;
 			   Args.push_front(toto);
 			}
-			count = 1;
 		}
 	}
 }
