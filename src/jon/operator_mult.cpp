@@ -142,10 +142,10 @@ void operatormult::flatten() {
 }
 
 Node* operatormult::simplify() {
-	flatten();
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		*i = (*i)->simplify();
 	}
+	flatten();
 
 	remove_ones();
 

@@ -11,6 +11,7 @@ bool operatorplus::compare(Node *a) {
 }
 
 void operatorplus::flatten() {
+
 	for (list<Node *>::iterator i = Args.begin();i!= Args.end(); i++) {
 		operatorplus *temp = dynamic_cast<operatorplus*>(*i);
 		if (temp != 0) {
@@ -125,10 +126,10 @@ void operatorplus::simplify_regroupables() {
 }
 
 Node* operatorplus::simplify() {
-	flatten();
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		*i = (*i)->simplify();
 	}
+	flatten();
 	remove_zeros();
 	simplify_fractionnals();
 	simplify_regroupables();
