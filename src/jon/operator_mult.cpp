@@ -6,11 +6,14 @@
 #include "function_power.hpp"
 using namespace std;
 
+//Node : pas mal de fonctions de cette classe ressemblent à celle de operatorplus... j'aurais surement pu factoriser ça un peu plus...
 
+//la comparaison est la même pour les 2 types d'opérateurs : + et *
 bool operatormult::compare(Node *a) {
 	Operator::compare(a);	
 }
 
+//Pareil qu'enlever les zéros pour une addition, on enlève les uns de la multiplication
 void operatormult::remove_ones() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
@@ -23,8 +26,9 @@ void operatormult::remove_ones() {
 	}
 }
 
+//Le zéro est absorbant pour la multiplication, c'est cool pour facilement simplifier !!
+//renvoit null si il n'y en a pas ou l'objet representant le zéro sinon
 Node * operatormult::get_zero() {
-
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		fractional* ii = dynamic_cast<fractional*>(*i);
 		if (ii!=0) {
@@ -36,6 +40,8 @@ Node * operatormult::get_zero() {
 	return 0; 
 }
 
+//Traitement à part des fractionels comme pour +
+//J'aurais surement pu factoriser pas mal de choses au niveau d'operator....
 void operatormult::simplify_fractionnals() {
 	fractional *first_fractional_found_ptr = 0;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
@@ -65,10 +71,14 @@ void operatormult::simplify_fractionnals() {
 	}
 }
 
+//fonction auxiliaire dont on se sert juste au dessous
 Node* get_not_null(Node *ptr1, Node *ptr2) {
 	if (ptr1 != 0) return ptr1;
 	return ptr2;
 }
+//Fonction monstres qui ressemble beaucoup à celle de plus, mais moins compliqué parce que les puissances sont forcéments des entiers
+//(d'ailleurs, ça pourrait être des fractionals...) Du coup en transformant x^i en x*x*x, il suffit de compter les occurences de x
+//Neanmoins, c'est pas si facile.. il y a plein de cas ... et pleins de bugs...
 void operatormult::simplify_regroupables() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		Regroupable* ii = dynamic_cast<Regroupable*>(*i);
@@ -124,7 +134,8 @@ void operatormult::simplify_regroupables() {
 		}
 	}
 }
-
+// Applatir... pareil que +, sauf qu'on peut aussi applatir les puissances parce qu'on accepte que des entiers héhé...
+//Gare aux complications si on passe en fractionels :)
 void operatormult::flatten() {
 	for (list<Node *>::iterator i = Args.begin();i!= Args.end(); i++) {
 		operatormult *temp = dynamic_cast<operatormult*>(*i);
@@ -146,6 +157,7 @@ void operatormult::flatten() {
 	}
 }
 
+//la simplification qui fait appel aux autres méthodes
 Node* operatormult::simplify() {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		*i = (*i)->simplify();
@@ -164,6 +176,8 @@ Node* operatormult::simplify() {
 	if (Args.size() == 1) return Args.front();
 	else return this;
 }
+
+//La dérivée d'un produit est la somme de tous les produits où on en dérive que un seul
 Node* operatormult::derive() {
 	operatorplus* result = new operatorplus();
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
@@ -180,9 +194,14 @@ Node* operatormult::derive() {
 	}
 	return result;
 }
+
+//là, il faut essayer de partitioner en 2 le produit pour retomber sur la formule : (uov)' = v' * u'ov.. Good luck...
+//Et encore, on parle pas d'intégration par parties, de changement de variables....
 Node* operatormult::integrate() {
 	return this;
 }
+
+//Imprimer un produit et les fils (enfin un truc pas dur, ouf)
 void operatormult::print() {
 	list<Node *>::iterator beforelast = --Args.end();
 	cout << "(";
