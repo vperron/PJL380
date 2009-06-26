@@ -4,9 +4,14 @@
 using namespace std;
 
 
-Node* Variable::derive() {
+Node* Variable::derive(string& the_name) {
 	fractional* result = new fractional;
-	result->num = 1;
+	if (name.compare(the_name) == 0) {
+		result->num = 1;
+	}
+	else {
+		result->num = 0;
+	}
 	result->denom = 1;
 	return result;
 }

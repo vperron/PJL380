@@ -25,8 +25,8 @@ Node* functionexp::simplify() {
 	return this;
 }
 
-Node* functionexp::derive() {
-	Node *l = this->arg->derive();
+Node* functionexp::derive(string &s) {
+	Node *l = this->arg->derive(s);
 	operatormult *result = new operatormult;
 	functionexp *res3 = new functionexp;
 	res3->arg = this->arg;

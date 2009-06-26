@@ -16,7 +16,7 @@ bool fractional::compare(Node* a) {
 }
 
 //La dérivée d'une constante est nulle...
-Node* fractional::derive() {
+Node* fractional::derive(string& s) {
 	fractional * res = new fractional;
 	res->num = 0;
 	res->denom = 1;

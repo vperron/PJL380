@@ -26,8 +26,8 @@ Node* functionln::simplify() {
 	return this;
 }
 
-Node* functionln::derive() {
-	Node *l = this->arg->derive();
+Node* functionln::derive(string &s) {
+	Node *l = this->arg->derive(s);
 	operatormult *result = new operatormult;
 	functionpower *res2 = new functionpower;
 	res2->power = -1;

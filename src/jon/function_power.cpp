@@ -43,9 +43,9 @@ Node* functionpower::simplify() {
 			}
 	}
 }
-Node* functionpower::derive() {
+Node* functionpower::derive(string &s) {
 	if (this->power != 1) { //TODO passer en fractional
-		Node *l = this->arg->derive();
+		Node *l = this->arg->derive(s);
 		operatormult *result = new operatormult;
 		fractional *res2 = new fractional;
 		functionpower *res3 = new functionpower;
@@ -59,7 +59,7 @@ Node* functionpower::derive() {
 		return result;
 	}
 	else {
-		return this->arg->derive();
+		return this->arg->derive(s);
 	}
 }
 Node* functionpower::integrate() {
