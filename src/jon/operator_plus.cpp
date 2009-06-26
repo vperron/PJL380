@@ -75,7 +75,7 @@ void operatorplus::simplify_regroupables() {
 				if (mul2!=0 && i!=j && mycompare(mul2->Args,mul->Args)) {
 					bool has_constant;
 					fractional *constant;
-					has_constant = get_constant(mul->Args,&constant);
+					has_constant = get_constant(mul2->Args,&constant);
 					j= Args.erase(j);
 					j--;
 					count =  (fractional *) (new operatorplus(count,constant))->simplify();
