@@ -8,7 +8,7 @@ using namespace std;
 
 
 bool operatormult::compare(Node *a) {
-	(Operator *)this->compare(a);	
+	Operator::compare(a);	
 }
 
 void operatormult::remove_ones() {
@@ -70,32 +70,40 @@ Node* get_not_null(Node *ptr1, Node *ptr2) {
 	return ptr2;
 }
 void operatormult::simplify_regroupables() {
+	cout << "je simplifie " << endl;
+	print();
+	cout <<endl;
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		Regroupable* ii = dynamic_cast<Regroupable*>(*i);
 		functionpower* iii = dynamic_cast<functionpower*>(*i);
 		bool found_something = 0;
 		int count = 0;
 		Node *maybe_function_arg = 0;
-		if (ii!=0) {
-			count = 1;
-			found_something = true;
-		}
-		else if (iii!=0) {
+		//check for functionpower first, since it is also regroupable
+		if (iii!=0) {
 			count = iii->power;
 			maybe_function_arg = iii->arg;
-			found_something = true;
+			//UNSET ii since we want to use functionpower first to catch things like (x+1)/(x+1)
+			ii = 0;
 		}
-		Node *maybe_regroupable = get_not_null(ii,maybe_function_arg);
+		else if (ii!=0) {
+			count = 1;
+		}
+		Node *maybe_regroupable = get_not_null(maybe_function_arg,ii);
 		if (maybe_regroupable!=0) {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				Regroupable* jj = dynamic_cast<Regroupable*>(*j);
 				functionpower* jjj = dynamic_cast<functionpower*>(*j);
+				//same as before, functionpower is also regroupable..
+				if ( jjj !=0 ) jj = 0;
 				if (jj!=0 && i!=j && jj->compare(maybe_regroupable) ) {
-				       	count++;
+					found_something = true;
+					count++;
 					j = Args.erase(j);
 					j--;
 				}
 				else if (jjj!=0 && i!=j && (jjj->arg)->compare(maybe_regroupable)) {
+					found_something = true;
 					count += jjj->power;
 					j = Args.erase(j);
 					j--;
@@ -112,9 +120,9 @@ void operatormult::simplify_regroupables() {
 				Args.push_front(toto);	
 			}
 			else {
-			   fractional *toto = new fractional;
-			   toto->num = toto->denom = 1;
-			   Args.push_front(toto);
+				fractional *toto = new fractional;
+				toto->num = toto->denom = 1;
+				Args.push_front(toto);
 			}
 		}
 	}

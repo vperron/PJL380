@@ -1,21 +1,24 @@
 #include "operator.hpp"
+#include <iostream>
 #include <typeinfo>
 using namespace std;
 
 bool Operator::compare(Node *a) {
-	//checker meme type
+	if (typeid(*this) != typeid(*a)) return false;
 	Operator *op = dynamic_cast<Operator*>(a);
 	if (op != 0) {
-		for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
-			if (Args.size() == op->Args.size()) {
+		if (Args.size() == op->Args.size()) {
+			for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 				bool found = false;
 				for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-					found = (*j)->compare(*i);
+					found = (*j)->compare(*i) || found;
 				}
-				if (!found) return false;
+				if (!found) {
+					return false;
+				}
 			}
-			else return false;
 		}
+		else return false;
 	}
 	return true;
 }

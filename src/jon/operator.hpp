@@ -2,7 +2,8 @@
 #define OPERATOR_H
 #include <list>
 #include "node.hpp"
-class Operator : public Node {
+#include "regroupable.hpp"
+class Operator : public Regroupable {
 	private:
 
 	public :

@@ -7,7 +7,7 @@
 using namespace std;
 
 bool operatorplus::compare(Node *a) {
-	(Operator *)this->compare(a);	
+	Operator::compare(a);	
 }
 
 void operatorplus::flatten() {

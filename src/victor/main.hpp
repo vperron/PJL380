@@ -157,7 +157,7 @@ namespace
     
     void    do_div(char const*, char const*)     { 
         cout << "DIVIDE\n";
-		pile.push(new functionpower(1,pop_getval(pile)));
+		pile.push(new functionpower(-1,pop_getval(pile)));
         pile.push(new operatormult(pop_getval(pile),pop_getval(pile)));
 
     }
