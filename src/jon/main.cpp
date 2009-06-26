@@ -1,4 +1,4 @@
-
+#include "utils.hpp"
 #include "operator_plus.hpp"
 #include "variable.hpp"
 #include "function_power.hpp"
@@ -48,10 +48,19 @@ int main(void) {
 	res->print();
 */
 
-	operatormult* toto = new operatormult;
-	toto->Args.push_back(new fractional(2));
-	toto->Args.push_back(new fractional(3));
-	toto->print();
-	toto->simplify()->print();
+	operatorplus* toto = new operatorplus;
+	toto->Args.push_back(new Variable("x"));
+	toto->Args.push_back(new Variable("x"));
+	operatorplus* tutu = new operatorplus;
+	tutu->Args.push_back(toto->simplify());
+	tutu->Args.push_back(new Variable("x"));
+	/*list<Node *> tutu; 
+	tutu.push_back(new Variable("x"));
+	tutu.push_back(new Variable("x"));
+	tutu.push_back(new Variable("y"));*/
+	//toto->Args.push_back(new fractional(3));
+	//cout << mycompare(toto->Args, tutu);
+	tutu->print();
+	tutu->simplify()->print();
 	return 0;
 }

@@ -1,6 +1,9 @@
 #include <iostream>
 #include "operator_plus.hpp"
 #include "fractional.hpp"
+#include "regroupable.hpp"
+#include "operator_mult.hpp"
+#include "utils.hpp"
 using namespace std;
 
 bool operatorplus::compare(Node *a) {
@@ -41,7 +44,7 @@ void operatorplus::simplify_fractionnals() {
 			}
 		}
 	}	
-	Args.push_back(first_fractional_found_ptr);
+	if (first_fractional_found_ptr != 0) Args.push_back(first_fractional_found_ptr);
 }
 
 
@@ -57,6 +60,73 @@ void operatorplus::remove_zeros(){
 	}
 }
 
+void operatorplus::simplify_regroupables() {
+	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
+		cout << "iteration i" << endl;
+		Regroupable *expr = dynamic_cast<Regroupable *>(*i);
+		operatormult *mul = dynamic_cast<operatormult *>(*i);
+		fractional *count = new fractional(0);
+		Node *matched_node = 0;
+		if (expr != 0) {
+			count = new fractional(1);
+			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
+				Regroupable *expr2 = dynamic_cast<Regroupable *>(*i);
+				operatormult *mul2 = dynamic_cast<operatormult *>(*i);
+				if (expr2 != 0 && i!=j && expr->compare(expr2)) {
+					cout << "yo"<<endl;
+					matched_node = expr;
+					j=Args.erase(j);
+					j--;
+					cout << "iha" << endl;
+					count = (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
+					cout << "aha" << endl;
+				} else if (mul2 !=0 && i!=j) {
+					matched_node = expr;
+					fractional *constant;
+					bool has_constant = get_constant(mul2->Args,&constant);
+					if ((mul2->Args.size() == 2) && has_constant && member_of(expr,mul2->Args)) {
+						j= Args.erase(j);
+						j--;
+						count =  (fractional *) (new operatorplus(count,constant))->simplify();
+					}
+				}
+			}
+		} else if (mul != 0) {
+			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
+				Regroupable *expr2 = dynamic_cast<Regroupable *>(*i);
+				operatormult *mul2 = dynamic_cast<operatormult *>(*i);
+				if (expr2 != 0 && i!=j) {
+					bool has_constant;
+					fractional *constant;
+					has_constant = get_constant(mul->Args,&constant);
+					if ((mul2->Args.size() == 2) && has_constant && member_of(expr2,mul->Args)) {
+						matched_node = expr2;
+						j= Args.erase(j);
+						j--;
+						count =  (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
+					}
+				} else if (mul2!=0 && i!=j && mycompare(mul2->Args,mul->Args)) {
+					bool has_constant;
+					fractional *constant;
+					has_constant = get_constant(mul->Args,&constant);
+					j= Args.erase(j);
+					j--;
+					count =  (fractional *) (new operatorplus(count,constant))->simplify();
+					matched_node = mul2;
+				}
+			}
+		}
+		cout << "je suis la " << endl;
+		if (matched_node != NULL) {
+			cout << "non" << endl;
+			operatormult *result = new operatormult(count,matched_node);
+			Args.push_back(result->simplify());
+			Args.erase(i);
+			i--;
+		}
+	}
+	cout << "done" << endl;
+}
 
 Node* operatorplus::simplify() {
 	flatten();
@@ -65,6 +135,9 @@ Node* operatorplus::simplify() {
 	}
 	remove_zeros();
 	simplify_fractionnals();
+	cout << "begin " << endl;
+	simplify_regroupables();
+	cout << "fini" << endl;
 	if (Args.size() == 1) return Args.front();
 	else return this;
 }

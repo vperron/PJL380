@@ -7,6 +7,7 @@ class operatorplus: public Operator {
 		void simplify_fractionnals();
 		void flatten() ;
 		void remove_zeros();
+		void simplify_regroupables();
 
 	public :
 		virtual Node *simplify(void)  ;
