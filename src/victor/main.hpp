@@ -168,6 +168,20 @@ namespace
     }
 
 
+	void 	do_derive(char const * deb, char const * fin) {
+		string s(deb, fin);
+		// On va recuperer la sous-chaine correspondant à la variable en question.
+		cout << s << endl;
+		int end = s.find('(');
+		cout << "Position : "<< end << endl;
+		s = s.substr(3,end-3);
+		cout << "DERIVE( / " << s << ")" << endl;
+
+		// On effectue la derivation.
+		pile.push(pop_getval(pile)->derive(s));
+	}
+
+
 	// Foncteur utile ( et un peu plus finaud ;) ) pour traiter toutes les fonctions possibles 
 	// Un peu de l'overkill : en fait je n'ai besoin ni de propriétés, ni de constructeur...
 	// Mais bon c'est joli quand meme !
@@ -237,13 +251,19 @@ struct calculator : public grammar<calculator>
             // function = confix_p(lexeme_d[ ((+alpha_p >> *(alnum_p | '_')) >> '(') ], expression, ch_p(')'))[&do_func];
 
 
-			// TODO: Pour le moment, ça fait un segfault.
 
+			// Handler toutes  les fonctions; utilise un foncteur
 			function = 
 				confix_p( str_p("cos(") , expression, ch_p(')'))[do_func<functioncos>()]     |
 				confix_p( str_p("sin(") , expression, ch_p(')'))[do_func<functionsin>()] |
 				confix_p( str_p("exp(") , expression, ch_p(')'))[do_func<functionexp>()] |
 				confix_p( str_p("ln(" ) , expression, ch_p(')'))[do_func<functionln>()]
+				;
+
+			// On definit les operateurs de derivation
+			derive = 
+				confix_p( str_p("d/d") >> var_decl >> ch_p('('), expression, ch_p(')'))[&do_derive]
+				// (function >> ch_p('\''))[&do_derive]
 				;
 
 
@@ -254,6 +274,7 @@ struct calculator : public grammar<calculator>
                 fractional |
                 integer |
                 function |
+				derive |
                 var_decl |
                 '(' >> expression >> ')' |
                 ( '-' >> factor )[&do_neg] |
@@ -282,7 +303,7 @@ struct calculator : public grammar<calculator>
 
 
         // Chaque element de la grammaire est une regle parametree par notre scanner.
-        rule<ScannerT> expression, term, factor, integer, var_decl, function, reel, fractional, power;
+        rule<ScannerT> expression, term, factor, integer, var_decl, function, reel, fractional, power, derive;
 
 
 
