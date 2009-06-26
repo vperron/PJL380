@@ -28,7 +28,7 @@ Node* functionsin::integrate() {
 	return (Node *) 0;
 }
 void functionsin::print() {
-	cout << "cos("; 
+	cout << "sin("; 
 	arg->print();
-	cout << ")^";
+	cout << ")";
 }
