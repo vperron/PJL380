@@ -9,5 +9,8 @@
 using namespace std;
 
 int main(void) {
+	fractional toto(1);
+	fractional tutu(2);
+	cout << toto.compare(&tutu) <<endl;
 	return 0;
 }

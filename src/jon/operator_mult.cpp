@@ -94,9 +94,26 @@ void operatormult::simplify_regroupables() {
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				Regroupable* jj = dynamic_cast<Regroupable*>(*j);
 				functionpower* jjj = dynamic_cast<functionpower*>(*j);
+				cout << "YO " <<endl;
+				(*i)->print();
+				cout <<endl;
+				(*j)->print();
+				cout <<endl;
+				cout << "MAYBEREGR" <<endl;
+				maybe_regroupable->print();
+				cout <<endl;
+				if (jj!=0) {
+					cout << "JJ : " <<endl;
+					jj->print();
+					cout<<endl;
+					cout <<"HERE"<<endl;
+					cout << ( jj->compare(maybe_regroupable))<<endl;
+				}
+				
 				//same as before, functionpower is also regroupable..
 				if ( jjj !=0 ) jj = 0;
 				if (jj!=0 && i!=j && jj->compare(maybe_regroupable) ) {
+					cout << "COUCOU" <<endl;
 					found_something = true;
 					count++;
 					j = Args.erase(j);

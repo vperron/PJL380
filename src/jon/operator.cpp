@@ -10,8 +10,18 @@ bool Operator::compare(Node *a) {
 		if (Args.size() == op->Args.size()) {
 			for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 				bool found = false;
-				for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-					found = (*j)->compare(*i) || found;
+				cout <<"iteration i " <<endl;
+				for (list<Node *>::iterator j=op->Args.begin();j!=op->Args.end();j++) {
+					cout << "looking for : " << endl;
+					(*i)->print();
+					cout << "got : "<<endl;
+					(*j)->print();
+					found = (*j)->compare(*i) ;
+					if (found) {
+						cout << "MATCH";
+						break;
+					}
+
 				}
 				if (!found) {
 					return false;

@@ -10,7 +10,7 @@ bool fractional::compare(Node* a) {
 	if (b != 0) {
 		fractional *test1 = this->simplify();
 		fractional *test2 = b->simplify();
-		return (test1->num==num && test2->denom==denom);
+		return (test1->num==test2->num && test1->denom==test2->denom);
 	}
 	return false;
 }
