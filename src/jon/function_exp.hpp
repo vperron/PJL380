@@ -6,7 +6,7 @@
 class functionexp: public Function {
 	public :
 		virtual Node *simplify(void)   ;
-		virtual Node *derive(void)    ;
+		virtual Node *derive(string&)    ;
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 

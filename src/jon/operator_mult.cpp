@@ -178,7 +178,7 @@ Node* operatormult::simplify() {
 }
 
 //La dérivée d'un produit est la somme de tous les produits où on en dérive que un seul
-Node* operatormult::derive() {
+Node* operatormult::derive(string &s) {
 	operatorplus* result = new operatorplus();
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
 		operatormult* temp = new operatormult();
@@ -187,7 +187,7 @@ Node* operatormult::derive() {
 				(temp->Args).push_back(*j);	
 			}
 			else {
-				(temp->Args).push_back((*j)->derive());	
+				(temp->Args).push_back((*j)->derive(s));	
 			}
 		}
 		(result->Args).push_back(temp);

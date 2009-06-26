@@ -11,7 +11,7 @@ class operatorplus: public Operator {
 
 	public :
 		virtual Node *simplify(void)  ;
-		virtual Node *derive(void)    ;
+		virtual Node *derive(string&)    ;
 		virtual Node *integrate(void) ;
 		virtual void print(void)      ;
 		virtual bool compare(Node *)  ;

@@ -15,8 +15,8 @@ Node* functionsin::simplify() {
 	arg = arg->simplify();	
 	return this;
 }
-Node* functionsin::derive() {
-	Node *l = this->arg->derive();
+Node* functionsin::derive(string &s) {
+	Node *l = this->arg->derive(s);
 	operatormult *result = new operatormult;
 	functioncos *res3 = new functioncos;
 	res3->arg = this->arg;

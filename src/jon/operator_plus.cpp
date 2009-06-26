@@ -191,9 +191,9 @@ Node* operatorplus::simplify() {
 	else return this;
 }
 //la dérivée d'une somme est la somme des dérivées
-Node* operatorplus::derive() {
+Node* operatorplus::derive(string &s) {
 	for (list<Node *>::iterator i=Args.begin();i!=Args.end();i++) {
-		*i = (*i)->derive();
+		*i = (*i)->derive(s);
 	}
 	return this;
 }
