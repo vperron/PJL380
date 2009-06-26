@@ -67,43 +67,12 @@ void operatorplus::simplify_regroupables() {
 		operatormult *mul = dynamic_cast<operatormult *>(*i);
 		fractional *count = new fractional(0);
 		Node *matched_node = 0;
-		if (expr != 0) {
-			count = new fractional(1);
-			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
-				Regroupable *expr2 = dynamic_cast<Regroupable *>(*j);
-				operatormult *mul2 = dynamic_cast<operatormult *>(*j);
-				if (expr2 != 0 && i!=j && expr->compare(expr2)) {
-					matched_node = expr;
-					j=Args.erase(j);
-					j--;
-					count = (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
-				} else if (mul2 !=0 && i!=j) {
-					fractional *constant;
-					bool has_constant = get_constant(mul2->Args,&constant);
-					if ((mul2->Args.size() == 2) && has_constant && member_of(expr,mul2->Args)) {
-						matched_node = expr;
-						j= Args.erase(j);
-						j--;
-						count =  (fractional *) (new operatorplus(count,constant))->simplify();
-					}
-				}
-			}
-		} else if (mul != 0) {
+		if (mul != 0) {
 			get_constant(mul->Args,&count);
 			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
 				Regroupable *expr2 = dynamic_cast<Regroupable *>(*j);
 				operatormult *mul2 = dynamic_cast<operatormult *>(*j);
-				if (expr2 != 0 && i!=j) {
-					bool has_constant;
-					fractional *constant;
-					has_constant = get_constant(mul->Args,&constant);
-					if ((mul->Args.size() == 2) && has_constant && member_of(expr2,mul->Args)) {
-						matched_node = expr2;
-						j= Args.erase(j);
-						j--;
-						count =  (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
-					}
-				} else if (mul2!=0 && i!=j && mycompare(mul2->Args,mul->Args)) {
+				if (mul2!=0 && i!=j && mycompare(mul2->Args,mul->Args)) {
 					bool has_constant;
 					fractional *constant;
 					has_constant = get_constant(mul->Args,&constant);
@@ -113,6 +82,37 @@ void operatorplus::simplify_regroupables() {
 					operatormult *mul3 = new operatormult;
 					mul3->Args = remove_constants(mul2->Args);
 					matched_node = mul3;
+				} else if (expr2 != 0 && i!=j) {
+					bool has_constant;
+					fractional *constant;
+					has_constant = get_constant(mul->Args,&constant);
+					if ((mul->Args.size() == 2) && has_constant && member_of(expr2,mul->Args)) {
+						matched_node = expr2;
+						j= Args.erase(j);
+						j--;
+						count =  (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
+					}
+				}
+			}
+		} else if (expr != 0) {
+			count = new fractional(1);
+			for (list<Node *>::iterator j=Args.begin();j!=Args.end();j++) {
+				Regroupable *expr2 = dynamic_cast<Regroupable *>(*j);
+				operatormult *mul2 = dynamic_cast<operatormult *>(*j);
+				if (mul2 !=0 && i!=j) {
+					fractional *constant;
+					bool has_constant = get_constant(mul2->Args,&constant);
+					if ((mul2->Args.size() == 2) && has_constant && member_of(expr,mul2->Args)) {
+						matched_node = expr;
+						j= Args.erase(j);
+						j--;
+						count =  (fractional *) (new operatorplus(count,constant))->simplify();
+					}
+				} else if (expr2 != 0 && i!=j && expr->compare(expr2)) {
+					matched_node = expr;
+					j=Args.erase(j);
+					j--;
+					count = (fractional *) (new operatorplus(count,new fractional(1)))->simplify();
 				}
 			}
 		}
