@@ -22,7 +22,10 @@ Node* functioncos::derive(string &s) {
 	res3->arg = this->arg;
 	(result->Args).push_back(l);
 	(result->Args).push_back(res3);
-	return result;
+	operatormult *negresult = new operatormult;
+	(negresult->Args).push_back(new fractional(-1));
+	(negresult->Args).push_back(result);
+	return negresult;
 }
 Node* functioncos::integrate() {
 	return (Node *) 0;
